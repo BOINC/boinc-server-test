@@ -5,8 +5,8 @@ echo "Attempting to install ansible, java and docker"
 #Check if using apt-get
 if [ -n "$(command -v apt-get)"  ];
 then
-    sudo apt-get -y -qq install ansible
-    sudo apt-get -y -qq install docker-ce
+    sudo apt -y -qq install ansible php php-xml php-mbstring
+    sudo apt -y -qq install docker-ce
     if [ $? -ne 0 ];
     then
         echo "Please set up the repository for docker-ce.  See https://docs.docker.com/engine/installation/linux/docker-ce/$(. /etc/os-release; echo "$ID")/"
@@ -18,7 +18,7 @@ fi
 if [ -n "$(command -v yum)" ]; 
 then
     sudo yum -y -q install epel-release
-    sudo yum -y -q install ansible docker composer
+    sudo yum -y -q install ansible docker composer php php-xml php-mbstring
 fi
 
 # Add user to docker group so that they can run docker commands
