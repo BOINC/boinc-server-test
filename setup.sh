@@ -2,8 +2,8 @@
 
 echo "Attempting to install ansible, java and docker"
 
-#Check if using apt-get
-if [ -n "$(command -v apt-get)"  ];
+#Check if using apt
+if [ -n "$(command -v apt)"  ];
 then
     sudo apt -y -qq install ansible php php-xml php-mbstring
     sudo apt -y -qq install docker-ce
