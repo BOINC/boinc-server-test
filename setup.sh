@@ -5,7 +5,7 @@ echo "Attempting to install ansible, java and docker"
 #Check if using apt
 if [ -n "$(command -v apt)"  ];
 then
-    sudo apt -y -qq install ansible php php-xml php-mbstring
+    sudo apt -y -qq install ansible php php-xml php-mbstring zip unzip
     sudo apt -y -qq install docker-ce
     if [ $? -ne 0 ];
     then
@@ -18,7 +18,7 @@ fi
 if [ -n "$(command -v yum)" ]; 
 then
     sudo yum -y -q install epel-release
-    sudo yum -y -q install ansible docker composer php php-xml php-mbstring
+    sudo yum -y -q install ansible docker composer php php-xml php-mbstring zip unzip
 fi
 
 # Add user to docker group so that they can run docker commands
