@@ -78,8 +78,7 @@ sudo systemctl enable docker
 sudo systemctl restart docker
 
 cd tests
-composer -q require phpunit/phpunit
-composer -q require guzzlehttp/guzzle
+composer -q install
 composer -q update
 cd ..
 
