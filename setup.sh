@@ -43,8 +43,8 @@ fi
 if [ -n "$(command -v yum)" ]; 
 then
     sudo yum -y -q install epel-release
-    sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-    sudo yum-config-manager --enable remi-php73
+    sudo yum -y -q install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    sudo yum-config-manager -y -q --enable remi-php73
     sudo yum -y -q clean all
     sudo yum -y -q install ansible docker composer php php-xml php-mbstring zip unzip
 fi
@@ -71,7 +71,7 @@ fi
 # Check if composer is installed.  If it isn't, direct user to instructions
 if [ -z "$(command -v composer)" ]; 
 then
-    install_composer()
+    install_composer
 fi
 
 sudo systemctl enable docker
