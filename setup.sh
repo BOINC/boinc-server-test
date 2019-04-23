@@ -1,6 +1,31 @@
 #!/bin/bash
 
-echo "Attempting to install ansible, java and docker"
+echo "Attempting to install ansible, java, docker, php and composer"
+
+#This function comes from https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
+install_composer() {
+    EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    ACTUAL_SIGNATURE="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+    
+    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]
+    then
+        >&2 echo 'ERROR: Invalid installer signature'
+        rm composer-setup.php
+        exit 1
+    fi
+    
+    sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    RESULT=$?
+    rm composer-setup.php
+    if [ $RESULT -ne 0 ];
+    then
+        echo "Failed to install composer.  Return code: $RESULT"
+        exit 1
+    else
+        echo "Composer installed successfully"
+    fi
+}
 
 #Check if using apt
 if [ -n "$(command -v apt)"  ];
@@ -18,6 +43,9 @@ fi
 if [ -n "$(command -v yum)" ]; 
 then
     sudo yum -y -q install epel-release
+    sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    sudo yum-config-manager --enable remi-php73
+    sudo yum -y -q clean all
     sudo yum -y -q install ansible docker composer php php-xml php-mbstring zip unzip
 fi
 
@@ -43,17 +71,16 @@ fi
 # Check if composer is installed.  If it isn't, direct user to instructions
 if [ -z "$(command -v composer)" ]; 
 then
-    echo "Please download and install composer.  See https://getcomposer.org/download/"
-    exit 1
+    install_composer()
 fi
 
 sudo systemctl enable docker
 sudo systemctl restart docker
 
 cd tests
-composer require phpunit/phpunit
-composer require guzzlehttp/guzzle
-composer update
+composer -q require phpunit/phpunit
+composer -q require guzzlehttp/guzzle
+composer -q update
 cd ..
 
 echo "Setup complete."
